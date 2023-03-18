@@ -5,7 +5,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import store from './app/store';
 import  {BrowserRouter as Router,Routes,Route} from "react-router-dom";
-import Addproduct from './components/Addproduct';
+import Addproduct from './components/Addproducts';
 import Cart from './components/Cart';
 import Details from './components/Details';
 
