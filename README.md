@@ -1,4 +1,17 @@
-# Getting Started with Create React App
+# Ecommerce React App
+
+A Ecommerce web app has been made.
+
+## Features
+
+- Product items have been fetched and shown from the given API (https://my-json-server.typicode.com/) 
+- Different sections like men, women and electronics.
+- Navbar is consists of the above mentioned categories along with the home button and in the right top corner the buttons for wishlist and cart pages are there respectively.
+- Can wishlist any product, and we can unwishlist any product from the wishlist page.
+- Products can be added to cart, we can increase or decrease the quantity of the product as well as we can remove any particular item from the cart.
+- In cart the total amount will be displayed as per the items added to the cart.
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
