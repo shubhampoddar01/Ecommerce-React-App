@@ -1,18 +1,21 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import products from './reducers'
-import "@mui/material"
-import { createStore } from 'redux';
-import { Provider } from 'react-redux'
-const store=createStore(products)
+import ReactDom from 'react-dom';
+import "./index.css";
+import App from "./App";
+import { Provider } from "react-redux";
+import store  from "./store";
+import { persistStore } from "redux-persist";
+import { PersistGate } from 'redux-persist/es/integration/react';
 
+let persistor = persistStore(store);
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+ReactDom.render(
+  <React.StrictMode>
     <Provider store={store}>
-
+      <PersistGate persistor={persistor}>
         <App />
+      </PersistGate>
     </Provider>
+  </React.StrictMode>,
+  document.getElementById("root")
 );

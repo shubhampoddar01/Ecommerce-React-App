@@ -1,52 +1,80 @@
-import Nav from "./Component/Nav";
-import ProductDetail from "./Component/ProductDetail";
-import AddProduct from "./Component/AddProduct";
-import CartItems from "./Component/CartItems";
-import ProductItemList from "./Component/ProductItemList";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { addproducts } from "./actions/index";
-import customFetch from "./apiCall";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import Main from "./components/Main";
+import Navbar from "./components/navbar";
+import Cart from "./components/cart";
+import { toast } from "react-toastify";
+import ToastNotification from "./components/ToastNotification";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import AddProduct from "./components/AddProduct";
+import { addcartItem } from "./Redux/CartSlice";
+import { useDispatch } from "react-redux";
+import ProductDetails from "./components/Pdp";
 
-function App() {
-  let productDetailItem = useSelector((state) => state.itemToDisplay);
+const App = () => {
 
-  const url = "https://my-json-server.typicode.com/jaiswalaryan/data/db";
-
+  const [cart, setCart] = useState([]);
+  const [productDetailspage, setProductDetailspage] = useState();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    let response = customFetch(url, {
-      method: "GET",
-    });
-    response.then((data) => {
-      let modifiedData = data.products.map((item) => {
-        item.edit = true;
-        return item;
-      });
-      window.localStorage.setItem("products", JSON.stringify(modifiedData));
-      let products = JSON.parse(window.localStorage.getItem("products"));
-      dispatch(addproducts(products));
-    });
-  }, []);
+  const handleClick = (e, item) => {
+    if (cart.indexOf(item) !== -1) return;
+    setCart([...cart, item]);
+    try {
+      dispatch(addcartItem(item));
+      toast.success(`Added to Cart`);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleChange = (item, d) => {
+    const ind = cart.indexOf(item);
+    const arr = cart;
+    arr[ind].amount += d;
+
+    if (arr[ind].amount === 0) arr[ind].amount = 1;
+    setCart([...arr]);
+  };
+
+  const handlePdp = (e, item) => {
+    console.log(`item of pdp`, item)
+    setProductDetailspage(item)
+  }
+  console.log(`productDetailspage`, productDetailspage)
 
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Nav />
-        <Routes>
-          <Route path="/" element={<ProductItemList />} />
-          <Route path="/addproducts" element={<AddProduct />} />
-          <Route
-            path={`/productdetails/${productDetailItem.id}`}
-            element={<ProductDetail item={productDetailItem} />}
-          />
-          <Route path="/cart" element={<CartItems />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <>
+      <Router>
+        <Navbar />
+        <div className="container">
+          <Routes>
+            <Route
+              exact
+              path="/"
+              element={<Main handleClick={handleClick} handlePdp={handlePdp} />}
+            ></Route>
+
+            <Route
+              exact
+              path="/cart"
+              element={
+                <Cart
+                  cart={cart}
+                  setCart={setCart}
+                  handleChange={handleChange}
+                />
+              }
+            ></Route>
+
+            <Route exact path="/addProduct" element={<AddProduct />}></Route>
+            <Route exact path="/productDetails" element={<ProductDetails handleClick={handleClick} productDetailspage={productDetailspage}/>}></Route>
+
+          </Routes>
+          <ToastNotification />
+        </div>
+      </Router>
+    </>
   );
-}
+};
 
 export default App;
