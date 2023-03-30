@@ -1,6 +1,6 @@
 # Ecommerce React App
 
-A Ecommerce web app has been made.
+An Ecommerce web app has been made.
 
 ## Features
 
